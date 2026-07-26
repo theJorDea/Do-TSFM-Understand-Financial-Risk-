@@ -1,0 +1,31 @@
+# PRE-REGISTERED market regime windows.
+# Frozen BEFORE any TSFM inference is run (see docs/preregistration.md).
+# Rule: every out-of-sample date inside a window below is "crisis"; all other
+# out-of-sample dates are "calm". Windows were chosen from well-documented
+# market events, by date, without looking at any model's results.
+
+crisis_windows:
+  - name: global_financial_crisis
+    start: 2008-09-01
+    end: 2009-06-30
+  - name: eurozone_debt_crisis
+    start: 2011-07-01
+    end: 2011-12-31
+  - name: china_devaluation_vol_shock
+    start: 2015-08-01
+    end: 2016-02-29
+  - name: q4_2018_selloff
+    start: 2018-10-01
+    end: 2018-12-31
+  - name: covid_crash
+    start: 2020-02-15
+    end: 2020-05-31
+  - name: rates_shock_2022
+    start: 2022-01-01
+    end: 2022-10-31
+  - name: yen_carry_unwind_2024
+    start: 2024-07-25
+    end: 2024-08-30
+  - name: tariff_shock_2025
+    start: 2025-04-01
+    end: 2025-05-15

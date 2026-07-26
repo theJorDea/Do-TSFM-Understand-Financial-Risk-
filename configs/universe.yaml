@@ -1,0 +1,34 @@
+# Asset universe. Daily close prices; log-returns.
+# start: earliest date requested (actual availability may be later; recorded in the data card).
+
+start: 2000-01-01
+end: 2026-06-30
+price_field: adj_close
+series:
+  equity_index:
+    - { ticker: "^GSPC",     name: "S&P 500" }
+    - { ticker: "^STOXX50E", name: "EURO STOXX 50" }
+    - { ticker: "^N225",     name: "Nikkei 225" }
+    - { ticker: "^FTSE",     name: "FTSE 100" }
+    - { ticker: "^GDAXI",    name: "DAX" }
+  equity_single:
+    - { ticker: "AAPL", name: "Apple" }
+    - { ticker: "MSFT", name: "Microsoft" }
+    - { ticker: "JPM",  name: "JPMorgan" }
+    - { ticker: "XOM",  name: "ExxonMobil" }
+    - { ticker: "JNJ",  name: "Johnson & Johnson" }
+    - { ticker: "NVDA", name: "NVIDIA" }
+  fx:
+    - { ticker: "EURUSD=X", name: "EUR/USD" }
+    - { ticker: "USDJPY=X", name: "USD/JPY" }
+    - { ticker: "GBPUSD=X", name: "GBP/USD" }
+    - { ticker: "AUDUSD=X", name: "AUD/USD" }
+  crypto:
+    - { ticker: "BTC-USD", name: "Bitcoin" }
+    - { ticker: "ETH-USD", name: "Ethereum" }
+  commodity:
+    - { ticker: "GC=F", name: "Gold futures" }
+    - { ticker: "CL=F", name: "WTI crude futures" }
+  bond_etf:
+    - { ticker: "TLT", name: "20+Y Treasury ETF" }
+    - { ticker: "HYG", name: "High-yield corporate ETF" }
