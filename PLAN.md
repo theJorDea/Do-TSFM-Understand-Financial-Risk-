@@ -13,7 +13,7 @@ Assumed pace: ~10–15 h/week. Dates are targets, not promises; scope control no
 - [x] Python project scaffolding: `uv` + `pyproject.toml`, `ruff`, `pytest`, GitHub Actions CI.
 - [x] Package skeleton `src/tsfm_risk/` per README structure.
 - [x] Config system (YAML + pydantic validation): every experiment = one config file.
-- [x] **Pre-registration commit**: `configs/regimes.yaml` with crisis/calm windows fixed by date, `docs/preregistration.md` with primary metrics (QLIKE, FZ0), α levels, and the decision rules — committed *before* any TSFM is run. This becomes a citable artifact ("we froze the protocol at commit X"). *Pre-registration commit: `01422e8`.*
+- [x] **Pre-registration commit**: `configs/regimes.yaml` with crisis/calm windows fixed by date, `docs/preregistration.md` with primary metrics (QLIKE, FZ0), α levels, and the decision rules — committed *before* any TSFM is run. This becomes a citable artifact ("we froze the protocol at commit X"). *Pre-registration commit: `3f2766d`.*
 
 **Done when:** CI is green on an empty-but-importable package; pre-registration committed. ✅
 
