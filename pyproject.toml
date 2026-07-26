@@ -32,9 +32,14 @@ tsfm = [
 
 [dependency-groups]
 dev = [
+    "ipykernel>=7.3.0",
+    "jupytext>=1.19.5",
+    "nbconvert>=7.17.1",
+    "nbformat>=5.10.4",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.6",
+    "seaborn>=0.13.2",
 ]
 
 [build-system]

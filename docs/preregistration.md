@@ -54,4 +54,6 @@ reported alongside full-sample results.
 
 ## Amendments
 
-None yet. Any change to this protocol gets a dated entry here with rationale.
+Recorded in `docs/amendments.md`. Amendment 1 (2026-07-26) revises the
+contamination design, makes the vol-path the primary output mapping, and extends
+the model roster — all before any inference was run.
