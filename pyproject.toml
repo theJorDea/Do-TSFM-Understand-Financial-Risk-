@@ -47,6 +47,7 @@ packages = ["src/tsfm_risk"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["notebooks"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B", "NPY"]
