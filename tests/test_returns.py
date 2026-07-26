@@ -5,6 +5,8 @@ import pytest
 from tsfm_risk.data.returns import (
     aggregate_returns,
     clean_returns,
+    drop_spike_reversals,
+    find_spike_reversals,
     log_returns,
     squared_return_proxy,
 )
@@ -63,3 +65,55 @@ def test_clean_returns_keeps_crashes_drops_garbage():
     cleaned = clean_returns(r)
     assert -0.30 in cleaned.values  # real crash survives
     assert 5.0 not in cleaned.values  # corrupt tick removed
+
+
+class TestSpikeReversals:
+    @staticmethod
+    def _quiet(n=200, sigma=0.004, seed=0):
+        rng = np.random.default_rng(seed)
+        return pd.Series(rng.normal(0, sigma, n), index=pd.bdate_range("2008-01-01", periods=n))
+
+    def test_detects_bad_tick_pair(self):
+        """One wrong close in a calm FX series: jumps and snaps straight back."""
+        r = self._quiet()
+        r.iloc[100] = 0.16
+        r.iloc[101] = -0.145
+        flagged = find_spike_reversals(r)
+        assert list(flagged) == [r.index[100]]
+
+    def test_real_crash_not_flagged(self):
+        """Apple 2000-09-29: -52% and the price stays down — must survive."""
+        r = self._quiet(sigma=0.03, seed=1)
+        r.iloc[100] = -0.73
+        r.iloc[101] = -0.06
+        assert len(find_spike_reversals(r)) == 0
+
+    def test_crash_whipsaw_not_flagged(self):
+        """S&P 500 on 2020-03-12/13: -10% then +8.9% — a real move in a
+        high-volatility regime, retraced ~89% but only ~2 local sigmas."""
+        r = self._quiet(n=200, sigma=0.04, seed=2)  # crisis-level volatility
+        r.iloc[100] = -0.10
+        r.iloc[101] = 0.089
+        assert len(find_spike_reversals(r)) == 0
+
+    def test_big_move_that_persists_not_flagged(self):
+        """Size alone must not trigger: no reversal, no flag."""
+        r = self._quiet(seed=3)
+        r.iloc[100] = 0.16
+        r.iloc[101] = 0.01
+        assert len(find_spike_reversals(r)) == 0
+
+    def test_drop_removes_both_days(self):
+        r = self._quiet(seed=4)
+        r.iloc[100] = 0.16
+        r.iloc[101] = -0.145
+        clean, spikes = drop_spike_reversals(r)
+        assert len(clean) == len(r) - 2
+        assert r.index[100] not in clean.index and r.index[101] not in clean.index
+        assert list(spikes) == [r.index[100]]
+
+    def test_no_spikes_leaves_series_untouched(self):
+        r = self._quiet(n=500, sigma=0.01, seed=5)
+        clean, spikes = drop_spike_reversals(r)
+        assert len(spikes) == 0
+        pd.testing.assert_series_equal(clean, r)
