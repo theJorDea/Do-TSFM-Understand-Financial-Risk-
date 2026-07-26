@@ -8,23 +8,26 @@ Assumed pace: ~10–15 h/week. Dates are targets, not promises; scope control no
 
 ---
 
-## Phase 0 — Infrastructure (week 1: Jul 27 – Aug 2)
+## Phase 0 — Infrastructure ✅ (completed 2026-07-26, ahead of schedule)
 
-- [ ] Python project scaffolding: `uv` + `pyproject.toml`, `ruff`, `pytest`, GitHub Actions CI.
-- [ ] Package skeleton `src/tsfm_risk/` per README structure.
-- [ ] Config system (YAML + pydantic validation): every experiment = one config file.
-- [ ] **Pre-registration commit**: `configs/regimes.yaml` with crisis/calm windows fixed by date, `docs/preregistration.md` with primary metrics (QLIKE, FZ0), α levels, and the decision rules — committed *before* any TSFM is run. This becomes a citable artifact ("we froze the protocol at commit X").
+- [x] Python project scaffolding: `uv` + `pyproject.toml`, `ruff`, `pytest`, GitHub Actions CI.
+- [x] Package skeleton `src/tsfm_risk/` per README structure.
+- [x] Config system (YAML + pydantic validation): every experiment = one config file.
+- [x] **Pre-registration commit**: `configs/regimes.yaml` with crisis/calm windows fixed by date, `docs/preregistration.md` with primary metrics (QLIKE, FZ0), α levels, and the decision rules — committed *before* any TSFM is run. This becomes a citable artifact ("we froze the protocol at commit X"). *Pre-registration commit: `01422e8`.*
 
-**Done when:** CI is green on an empty-but-importable package; pre-registration committed.
+**Done when:** CI is green on an empty-but-importable package; pre-registration committed. ✅
 
-## Phase 1 — Data & classical baselines (weeks 1–3: Aug 3 – Aug 16)
+## Phase 1 — Data & classical baselines (weeks 1–3: Aug 3 – Aug 16) — nearly complete
 
-- [ ] Data loaders (yfinance + cached parquet), log-returns, universe of ~25–30 series across 4 asset classes; data card documenting each series (source, span, missing-data policy).
-- [ ] Volatility proxies: squared returns everywhere; RV where available (Oxford-Man for pre-2022 indices, Binance 5-min for crypto).
-- [ ] Port & adapt from Riskforge: historical VaR/ES, EWMA, GARCH(1,1)-N/-t, GJR-GARCH-t (MLE), validated against `arch` in tests.
-- [ ] New: filtered historical simulation (FHS), HAR-RV.
-- [ ] Walk-forward engine: rolling re-fit (e.g. every 21 days, 1000-day window), strict no-leakage; unit test that shuffled-future data changes nothing in-sample.
-- [ ] First end-to-end run: classical models on full universe → baseline results table.
+- [x] Data loaders (yfinance + cached parquet), log-returns, 21-series universe across 6 asset classes.
+- [ ] Data card documenting each series (source, span, missing-data policy, removed observations).
+- [x] Volatility proxy: squared returns (proxy-robust QLIKE track).
+- [ ] RV where available (Oxford-Man for pre-2022 indices, Binance 5-min for crypto) — supporting track.
+- [x] GARCH(1,1)-N/-t, GJR-GARCH-t via custom MLE, validated against `arch` + synthetic recovery; Nelder-Mead fallback for flat likelihoods.
+- [x] Historical VaR/ES, EWMA, filtered historical simulation (path-wise vol updating for h>1), HAR (direct projection per horizon).
+- [x] Walk-forward engine: 1000-day window, refit every 21 days, daily variance filtering; leakage unit test (corrupted future ⇒ bit-identical forecasts).
+- [x] Parallel grid runner (ProcessPoolExecutor over (series, model) pairs).
+- [ ] First end-to-end run: classical models on full universe → baseline results table. *(running: `results/baselines_full.parquet`)*
 
 **Done when:** baseline QLIKE/coverage tables regenerate from one command and GARCH results match `arch` within tolerance.
 
@@ -40,14 +43,15 @@ Assumed pace: ~10–15 h/week. Dates are targets, not promises; scope control no
 
 **Done when:** every TSFM produces cached quantile forecasts for the full universe; smoke-test config runs end-to-end in CI (tiny series, CPU).
 
-## Phase 3 — Evaluation & statistics (weeks 6–8: Sep 7 – Sep 20)
+## Phase 3 — Evaluation & statistics (weeks 6–8: Sep 7 – Sep 20) — statistics built early
 
-- [ ] Losses: proxy-robust QLIKE, MSE; **FZ0 joint VaR-ES loss** (Fissler–Ziegel).
-- [ ] Backtests: Kupiec, Christoffersen, Engle–Manganelli DQ, Acerbi–Székely (port + extend from Riskforge).
-- [ ] Diebold–Mariano with HAC errors; **Model Confidence Set** (implement or vet `arch.utils`/existing package; validate on synthetic data where the true best model is known).
+- [x] Losses: proxy-robust QLIKE, MSE; **FZ0 joint VaR-ES loss** (Fissler–Ziegel).
+- [x] Backtests: Kupiec, Christoffersen (independence + conditional coverage), Engle–Manganelli DQ, Acerbi–Székely Z2 with implied-ν Student-t null and Monte-Carlo p-values.
+- [x] Diebold–Mariano with HAC + Harvey–Leybourne–Newbold correction; **Model Confidence Set** (T_max, moving-block bootstrap), validated on synthetic data with a known best model.
+- [x] Size/power of every test confirmed by Monte Carlo in the test suite.
 - [ ] Results database (one tidy parquet: model × series × horizon × α × regime × metric) + `make_tables.py`, `make_figures.py`.
 
-**Done when:** synthetic-data tests confirm each test's size/power behaves as published; full results table generates automatically.
+**Done when:** synthetic-data tests confirm each test's size/power behaves as published ✅; full results table generates automatically.
 
 ## Phase 4 — Main experiments & ablations (weeks 8–10: Sep 21 – Oct 4)
 
