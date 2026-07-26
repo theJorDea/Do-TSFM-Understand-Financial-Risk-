@@ -11,10 +11,13 @@ from tsfm_risk.evaluation.comparison import (
     diebold_mariano,
     model_confidence_set,
 )
+from tsfm_risk.evaluation.es_backtest import acerbi_szekely_z2, implied_nu
 from tsfm_risk.evaluation.losses import fz0, mse_variance, qlike
 
 __all__ = [
     "BacktestResult",
+    "acerbi_szekely_z2",
+    "implied_nu",
     "DMResult",
     "MCSResult",
     "christoffersen_conditional_coverage",

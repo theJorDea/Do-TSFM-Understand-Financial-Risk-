@@ -136,6 +136,27 @@ class Garch(RiskModel):
             ):
                 best = res
         assert best is not None
+
+        if not best.success:
+            # L-BFGS-B occasionally stalls on flat likelihoods (small alpha or
+            # gamma near a bound); polish with derivative-free Nelder-Mead,
+            # rejecting any excursion outside the box.
+            lo = np.array([b[0] for b in bounds])
+            hi = np.array([b[1] for b in bounds])
+
+            def nll_boxed(x: np.ndarray) -> float:
+                if np.any(x < lo) or np.any(x > hi):
+                    return 1e10
+                return nll(x)
+
+            polish = optimize.minimize(
+                nll_boxed,
+                best.x,
+                method="Nelder-Mead",
+                options={"maxiter": 5000, "xatol": 1e-8, "fatol": 1e-10},
+            )
+            if polish.fun <= best.fun and np.isfinite(polish.fun):
+                best = polish
         omega, alpha, beta, gamma, nu = unpack(best.x)
         self.params = GarchParams(
             omega=omega,
