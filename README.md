@@ -135,10 +135,12 @@ Tail risk at h=1, α=1% (FZ0 lower is better; `pass_*` = share of the 21 series 
 
 Four findings that set up the TSFM comparison:
 
-1. **GJR-GARCH-t is the sole occupant of the 90% Model Confidence Set** — on QLIKE *and* on FZ0. Leverage plus Student-t tails is the bar the foundation models must clear, not a generic GARCH(1,1).
+1. **The 90% Model Confidence Set contains three models** — GJR-GARCH-t, GARCH-t and filtered historical simulation (on QLIKE: GJR-GARCH-t and GARCH-N). GJR-GARCH-t has the lowest FZ0, but its edge over GARCH-t is not significant (DM p = 0.60). The bar for the foundation models is therefore *a set of strong tail models*, not one champion — and all three survive in crisis windows as well as calm ones.
 2. **Normal innovations fail unconditional coverage almost everywhere** at the 1% level: breach rates of 1.66% (garch11-n) and 2.00% (ewma-rm) against nominal 1%, passing Kupiec on 5% and 0% of series. This is the exact failure mode we hypothesise for TSFMs (H2) — so the study can detect it.
 3. **Historical simulation passes Christoffersen independence on only 14% of series** (breaches cluster in crises) while GJR-GARCH-t passes on 100%.
 4. **Even the winner passes the DQ test on just 57% of series.** The baselines are strong but not unbeatable — there is real headroom for a model that reads the tail better.
+
+**Methodological note.** Model comparison averages losses across series *within each date* before applying DM and the MCS. Flattening the panel into one 105k-row vector would let the block bootstrap and HAC treat 21 strongly correlated series as independent observations, understating standard errors: doing so shrank the MCS to a single model in both endpoints. The date-aggregated construction is the honest one, and it is what the tables above report.
 
 ---
 
@@ -355,10 +357,12 @@ Foundation-модели для временных рядов (TSFM) — Chronos,
 
 Четыре вывода, задающие рамку для сравнения с TSFM:
 
-1. **GJR-GARCH-t — единственный обитатель 90% Model Confidence Set**, и по QLIKE, и по FZ0. Планка для foundation-моделей — именно он, а не обычный GARCH(1,1).
+1. **В 90% Model Confidence Set попали три модели** — GJR-GARCH-t, GARCH-t и фильтрованная историческая симуляция (по QLIKE — GJR-GARCH-t и GARCH-N). У GJR-GARCH-t наименьший FZ0, но его преимущество над GARCH-t незначимо (DM p = 0.60). Значит, планка для foundation-моделей — это *множество сильных хвостовых моделей*, а не один чемпион; и все три остаются в множестве как в спокойные периоды, так и в кризисные.
 2. **Нормальные инновации почти повсеместно проваливают безусловное покрытие** на уровне 1%: частоты пробоев 1.66% и 2.00% при номинале 1%, тест Купика проходят на 5% и 0% серий. Это ровно тот режим отказа, который мы предполагаем у TSFM (H2), — значит, исследование способно его обнаружить.
 3. **Историческая симуляция проходит тест независимости лишь на 14% серий** (пробои кучкуются в кризисы), тогда как GJR-GARCH-t — на 100%.
 4. **Даже победитель проходит DQ-тест лишь на 57% серий.** Бейзлайны сильны, но небезупречны — запас для модели, лучше читающей хвост, реально существует.
+
+**Методологическое замечание.** При сравнении моделей лоссы усредняются по сериям **внутри каждой даты**, и только потом применяются DM и MCS. Если сплющить панель в один вектор из 105 тыс. строк, блочный бутстрап и HAC будут считать 21 сильно скоррелированную серию независимыми наблюдениями и занизят стандартные ошибки: при таком (неверном) построении MCS схлопывался до одной модели по обоим критериям. Таблицы выше построены корректным способом.
 
 ---
 

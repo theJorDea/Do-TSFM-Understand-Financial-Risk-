@@ -20,16 +20,16 @@ Generated from `results/baselines_full.parquet` — 6,632,892 evaluated forecast
 
 | model         |   mean_loss |   vs_best_p | in_MCS   |
 |:--------------|------------:|------------:|:---------|
-| gjr-garch11-t |     -7.9712 |    nan      | True     |
-| garch11-n     |     -7.9551 |      0.0000 | False    |
-| garch11-t     |     -7.9549 |      0.0000 | False    |
-| fhs-ewma      |     -7.9457 |      0.0000 | False    |
-| ewma-rm       |     -7.9407 |      0.0000 | False    |
-| har-proxy     |     -7.8222 |      0.0000 | False    |
-| historical    |     -7.6213 |      0.0000 | False    |
+| gjr-garch11-t |     -7.6957 |    nan      | True     |
+| garch11-n     |     -7.6886 |      0.3208 | True     |
+| garch11-t     |     -7.6832 |      0.0000 | False    |
+| fhs-ewma      |     -7.6776 |      0.0022 | False    |
+| ewma-rm       |     -7.6735 |      0.0001 | False    |
+| har-proxy     |     -7.5706 |      0.0001 | False    |
+| historical    |     -7.3691 |      0.0000 | False    |
 
 
-**Model Confidence Set (90%):** gjr-garch11-t
+**Model Confidence Set (90%):** garch11-n, gjr-garch11-t
 
 
 ## Tail risk, h=1, alpha=1% (FZ0 lower is better; pass_* = share of series passing at 5%)
@@ -78,39 +78,39 @@ Generated from `results/baselines_full.parquet` — 6,632,892 evaluated forecast
 
 | model         |   mean_loss |   vs_best_p | in_MCS   |
 |:--------------|------------:|------------:|:---------|
-| gjr-garch11-t |     -3.2181 |    nan      | True     |
-| garch11-t     |     -3.2105 |      0.0932 | False    |
-| fhs-ewma      |     -3.1903 |      0.0001 | False    |
-| garch11-n     |     -3.1366 |      0.0000 | False    |
-| ewma-rm       |     -3.0549 |      0.0000 | False    |
-| har-proxy     |     -3.0433 |      0.0000 | False    |
-| historical    |     -2.8983 |      0.0000 | False    |
+| gjr-garch11-t |     -3.0713 |    nan      | True     |
+| garch11-t     |     -3.0676 |      0.6028 | True     |
+| fhs-ewma      |     -3.0540 |      0.2222 | True     |
+| garch11-n     |     -3.0023 |      0.0000 | False    |
+| har-proxy     |     -2.9265 |      0.0000 | False    |
+| ewma-rm       |     -2.9231 |      0.0000 | False    |
+| historical    |     -2.7867 |      0.0000 | False    |
 
 
-**Model Confidence Set (90%):** gjr-garch11-t
+**Model Confidence Set (90%):** fhs-ewma, garch11-t, gjr-garch11-t
 
 
 ## Regime split (FZ0, h=1, alpha=1%)
 
 | model         |   ('FZ0', 'calm') |   ('FZ0', 'crisis') | ('in_MCS', 'calm')   | ('in_MCS', 'crisis')   |
 |:--------------|------------------:|--------------------:|:---------------------|:-----------------------|
-| ewma-rm       |           -3.2035 |             -2.2937 | False                | False                  |
-| fhs-ewma      |           -3.3014 |             -2.6213 | False                | True                   |
-| garch11-n     |           -3.2836 |             -2.3841 | False                | False                  |
-| garch11-t     |           -3.3308 |             -2.5943 | True                 | False                  |
-| gjr-garch11-t |           -3.3299 |             -2.6454 | True                 | True                   |
-| har-proxy     |           -3.2474 |             -1.9976 | False                | False                  |
-| historical    |           -3.1241 |             -1.7417 | False                | False                  |
+| ewma-rm       |           -3.0915 |             -2.0272 | False                | False                  |
+| fhs-ewma      |           -3.1680 |             -2.4469 | True                 | True                   |
+| garch11-n     |           -3.1546 |             -2.1911 | False                | False                  |
+| garch11-t     |           -3.1886 |             -2.4233 | True                 | True                   |
+| gjr-garch11-t |           -3.1864 |             -2.4586 | True                 | True                   |
+| har-proxy     |           -3.1248 |             -1.8712 | False                | False                  |
+| historical    |           -2.9907 |             -1.7006 | False                | False                  |
 
 
 ## Per asset class (FZ0, h=1, alpha=1%; * = in MCS)
 
 | model         | bond_etf   | commodity   | crypto   | equity_index   | equity_single   | fx       |
 |:--------------|:-----------|:------------|:---------|:---------------|:----------------|:---------|
-| ewma-rm       | -3.8073*   | -2.7122     | -1.6971  | -3.0705        | -2.7191         | -3.8364* |
-| fhs-ewma      | -3.9064*   | -2.8758*    | -1.9368* | -3.2503        | -2.8365         | -3.9157* |
-| garch11-n     | -3.8903*   | -2.7734     | -1.8998* | -3.1856        | -2.7928         | -3.8652* |
-| garch11-t     | -3.9365*   | -2.8755*    | -1.9457* | -3.2856*       | -2.8741*        | -3.8958* |
-| gjr-garch11-t | -3.9499*   | -2.8805*    | -1.9369* | -3.3066*       | -2.8834*        | -3.8862* |
-| har-proxy     | -3.5961*   | -2.5698     | -1.9647* | -3.1460        | -2.7473         | -3.7252* |
-| historical    | -3.5277    | -2.5751     | -1.9602* | -2.8867        | -2.5530         | -3.6609  |
+| ewma-rm       | -3.7972*   | -2.7127     | -1.5977  | -3.0831        | -2.7191         | -3.8035* |
+| fhs-ewma      | -3.8848*   | -2.8758*    | -1.8637* | -3.2551        | -2.8365         | -3.8902* |
+| garch11-n     | -3.8676*   | -2.7737     | -1.7952* | -3.1937        | -2.7928         | -3.8459* |
+| garch11-t     | -3.9095*   | -2.8756*    | -1.8488* | -3.2904*       | -2.8741*        | -3.8763* |
+| gjr-garch11-t | -3.9220*   | -2.8806*    | -1.8262* | -3.3117*       | -2.8834*        | -3.8674* |
+| har-proxy     | -3.5990*   | -2.5703     | -1.8882* | -3.1559        | -2.7473         | -3.6925* |
+| historical    | -3.5063    | -2.5754     | -1.9170* | -2.8791        | -2.5530         | -3.6557  |

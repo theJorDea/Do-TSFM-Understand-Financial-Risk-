@@ -97,7 +97,24 @@ def tail_table(df: pd.DataFrame, horizon: int, alpha: float) -> pd.DataFrame:
 def aligned_losses(
     df: pd.DataFrame, horizon: int, alpha: float, loss: str
 ) -> dict[str, np.ndarray]:
-    """Per-model loss series aligned on the common (series, origin) index."""
+    """Per-model loss series, **averaged across series within each date**.
+
+    The panel must not be flattened into one long (series, origin) vector: the
+    21 series are strongly correlated on any given day (equity indices move
+    together), so a stacked vector of ~105k rows carries nowhere near 105k
+    independent observations. Feeding it to a moving-block bootstrap or a HAC
+    estimator — both of which model *time* dependence only — understates the
+    standard errors, and the Model Confidence Set then eliminates models it has
+    no right to eliminate.
+
+    Averaging over the cross-section first yields one loss per date per model.
+    Time dependence is then handled correctly by the block bootstrap and HAC,
+    and the effective sample size (number of dates) is honest. This is the
+    standard construction for panel forecast comparison.
+
+    Dates are kept only where every model produced a forecast for the same set
+    of series, so the cross-sectional composition never differs between models.
+    """
     sub = df[(df.horizon == horizon) & (np.isclose(df.alpha, alpha))].copy()
     if loss == "fz0":
         sub = sub[(sub["var"] > 0) & (sub["es"] >= sub["var"])]
@@ -108,9 +125,10 @@ def aligned_losses(
         sub = sub[sub["sigma2"] > 0]
         sub["loss"] = qlike(sub["sigma2"].to_numpy(), (sub["realized"] ** 2).to_numpy())
 
-    wide = sub.pivot_table(index=["series", "origin"], columns="model", values="loss")
-    wide = wide.dropna()
-    return {m: wide[m].to_numpy() for m in wide.columns}
+    cell = sub.pivot_table(index=["origin", "series"], columns="model", values="loss")
+    cell = cell.dropna()  # same series set for every model
+    daily = cell.groupby(level="origin").mean().sort_index()
+    return {m: daily[m].to_numpy() for m in daily.columns}
 
 
 def rank_models(losses: dict[str, np.ndarray], horizon: int) -> tuple[pd.DataFrame, list[str]]:
