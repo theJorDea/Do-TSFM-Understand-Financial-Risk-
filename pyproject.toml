@@ -40,6 +40,7 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.6",
     "seaborn>=0.13.2",
+    "tabulate>=0.10.0",
 ]
 
 [build-system]
